@@ -3,6 +3,7 @@ import Vote from "./Vote";
 import { COLLECTION_ID, databases, DB_ID } from "../utils/appewrite";
 
 export default function Questions({ data }) {
+  const [isSubmited, setIsSubmited] = React.useState(false);
   const totalVotes = data.votes_1 + data.votes_2 + data.votes_3;
 
   const handleSubmit = (e) => {
@@ -24,6 +25,8 @@ export default function Questions({ data }) {
         votes_3: data.votes_3 + 1,
       });
     }
+
+    setIsSubmited(true);
   };
 
   return (
@@ -51,6 +54,7 @@ export default function Questions({ data }) {
 
         <button
           type="submit"
+          disabled={isSubmited}
           className="cursor-pointer ml-auto my-6 rounded shadow bg-green-400 text-white font-medium text-lg py-2 px-10 transition hover:bg-white hover:text-green-400 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-100">
           Submit your vote
         </button>
