@@ -12,6 +12,30 @@ export default function App() {
 
   useEffect(() => {
     getQuestiondfromDB();
+
+    const unsubscribe = client.subscribe(
+      `databases.${DB_ID}.collections.${COLLECTION_ID}.documents`,
+      (res) => {
+        console.log(res);
+
+        if (
+          res.events.includes("databases.*.collections.*.documents.*.update")
+        ) {
+          setQuestions((prevQuestions) => {
+            return prevQuestions.map((question) => {
+              if (question.$id !== res.payload.$id) {
+                return question;
+              }
+
+              return res.payload;
+            });
+          });
+        }
+      }
+    );
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
