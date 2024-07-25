@@ -1,9 +1,24 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { client, databases, DB_ID, COLLECTION_ID } from "./utils/appewrite";
+import Questions from "./components/Questions";
 
 export default function App() {
+  const [questions, setQuestions] = useState([]);
+
+  async function getQuestiondfromDB() {
+    const questions = await databases.listDocuments(DB_ID, COLLECTION_ID);
+    setQuestions(questions.documents);
+  }
+
+  useEffect(() => {
+    getQuestiondfromDB();
+  }, []);
+
   return (
-    <main>
-      <h1 className="text-3xl font-bold">RealTime Voting App</h1>
+    <main className="container max-w-3xl mx-auto px-4 py-10">
+      {questions.map((question) => {
+        return <Questions key={question.$id} data={question} />;
+      })}
     </main>
   );
 }
